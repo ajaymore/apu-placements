@@ -1,0 +1,100 @@
+{
+  "rules": {
+    ".read": "auth != null && root.child('admin').hasChild(auth.uid)",
+    ".write": "auth != null && root.child('admin').hasChild(auth.uid)",
+    "placements": {
+      "$year": {
+        "users": {
+          "$uid": {
+            ".read": "auth != null",
+            ".write": "auth != null && auth.uid == $uid"
+          }
+        },
+        "volunteers": {
+          "$uid": {
+            ".read": "auth != null",
+            ".write": "auth != null && root.child('admin').hasChild(auth.uid)"
+          }
+        },
+        "schedule": {
+          ".read": true,
+          ".write":
+            "auth != null && root.child('placements').child($year).child('volunteers').hasChild(auth.uid)"
+        },
+        "current-batch": {
+          ".read": true,
+          ".write": "auth != null && root.child('admin').hasChild(auth.uid)"
+        },
+        "organizations": {
+          ".read": "auth != null",
+          ".write": "auth != null && root.child('admin').hasChild(auth.uid)"
+        },
+        "uploads": {
+          ".read": true,
+          ".write":
+            "auth != null && root.child('placements').child($year).child('volunteers').hasChild(auth.uid)"
+        },
+        "my-activity": {
+          ".read": true,
+          ".write": "auth != null"
+        },
+        "news": {
+          ".read": true,
+          ".write":
+            "auth != null && root.child('placements').child($year).child('volunteers').hasChild(auth.uid)"
+        }
+      }
+    },
+    "users": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["email"]
+    },
+    "profiles": {
+      ".read": "auth != null",
+      ".write": false
+    },
+    "roles": {
+      ".read": "auth != null",
+      ".write":
+        "auth != null && root.child('roles').child('Admin').child(auth.uid).val() === true"
+    },
+    "course-details": {
+      "$uid": {
+        ".read":
+          "auth != null && (auth.uid == $uid || root.child('roles').child('Admin').child(auth.uid).val() === true)",
+        ".write":
+          "auth != null && (auth.uid == $uid || root.child('roles').child('Admin').child(auth.uid).val() === true)"
+      }
+    },
+    "gdrive-queue": {
+      ".read": true,
+      ".write": true
+    },
+    "uploads": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "offcampus": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "entries": {
+        ".read": "auth != null",
+        ".write": "auth != null",
+        ".indexOn": ["dateCreated"]
+      }
+    },
+    "domains": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "logs": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "my-activity": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}
